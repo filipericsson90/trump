@@ -1,0 +1,14 @@
+Trump <- read_excel("/Trump tweets by day of week.xlsx", 
+                    col_types = c("text", "text", "date", "numeric", "numeric", "text", "text"))
+
+ggplot(data = Trump) +
+  geom_bar(aes(x = created_at), color = "red") +
+  #facet_wrap(~ source) + 
+  labs(
+    x = "Date",
+    y = "Number of tweets/day",
+    title = "President Trumps' number of tweets per day",
+    caption = "Data from https://docs.google.com/spreadsheets/d/1X-Osf6lYJbMZ_Ry4RDD4Wd59pH4A-D8dJAbM4lExGKg/edit?usp=sharing"
+  ) +
+  theme_minimal() +
+  scale_y_continuous(limits = c(0,80))
