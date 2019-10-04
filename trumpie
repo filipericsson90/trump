@@ -1,9 +1,9 @@
 Trump <- read_excel("/Trump tweets by day of week.xlsx", 
                     col_types = c("text", "text", "date", "numeric", "numeric", "text", "text"))
 
-ggplot(data = Trump) +
-  geom_bar(aes(x = created_at), color = "red") +
-  #facet_wrap(~ source) + 
+ggplot() +
+  geom_bar(data = Trump, aes(x = created_at), color = "red", fill = "red")+
+ # facet_wrap(~ source) + <-----Remove the # if you want to facet based on Twitter source.
   labs(
     x = "Date",
     y = "Number of tweets/day",
@@ -11,4 +11,4 @@ ggplot(data = Trump) +
     caption = "Data from https://docs.google.com/spreadsheets/d/1X-Osf6lYJbMZ_Ry4RDD4Wd59pH4A-D8dJAbM4lExGKg/edit?usp=sharing"
   ) +
   theme_minimal() +
-  scale_y_continuous(limits = c(0,80))
+  scale_y_continuous(limits = c(0,80), breaks = seq(0,80, by = 10))
