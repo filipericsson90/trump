@@ -1,9 +1,14 @@
-Trump <- read_excel("/Trump tweets by day of week.xlsx", 
-                    col_types = c("text", "text", "date", "numeric", "numeric", "text", "text"))
+library(tidyverse)
+library(wesanderson)
+library(readxl)
 
+Trump <- read_excel("C:/Users/Filip/Desktop/Trump tweets by day of week.xlsx", 
+                    col_types = c("text", "text", "date", "numeric", "numeric", "text", "text"))
+# Plot it!
 ggplot() +
-  geom_bar(data = Trump, aes(x = created_at), color = "red", fill = "red")+
- # facet_wrap(~ source) + <-----Remove the # if you want to facet based on Twitter source.
+  geom_bar(data = Trump_new, aes(x = created_at), color = "red", fill = "red") +
+ #facet_wrap(vars(Name,Mentioned), ncol = 2, nrow = 8) + 
+  geom_hline(yintercept = 11.15, color = "blue") +
   labs(
     x = "Date",
     y = "Number of tweets/day",
@@ -12,3 +17,54 @@ ggplot() +
   ) +
   theme_minimal() +
   scale_y_continuous(limits = c(0,80), breaks = seq(0,80, by = 10))
+
+
+number_trump <- Trump %>% 
+  group_by(created_at) %>% 
+  count(created_at) %>% 
+  filter(n > 60)
+
+#Find tweets about candidates:
+Trump <- Trump %>% 
+  mutate(text = str_to_lower(text))
+
+# Find key words
+hillary <- as.data.frame(str_detect(Trump$text, coll("hillary", ignore_case = TRUE)))
+sanders <- as.data.frame(str_detect(Trump$text, coll("sanders", ignore_case = TRUE)))
+fake_news <- as.data.frame(str_detect(Trump$text, coll("fake news", ignore_case = TRUE)))
+clinton <- as.data.frame(str_detect(Trump$text, coll("clinton", ignore_case = TRUE)))
+wall <- as.data.frame(str_detect(Trump$text, coll("wall", ignore_case = TRUE)))
+mexico <- as.data.frame(str_detect(Trump$text, coll("mexico", ignore_case = TRUE)))
+
+#rename the variables:
+hillary <- hillary %>% 
+  select(Hillary = `str_detect(Trump$text, coll("hillary", ignore_case = TRUE))`)
+
+sanders <- sanders %>% 
+  select(Sanders = `str_detect(Trump$text, coll("sanders", ignore_case = TRUE))`)
+
+wall <- wall %>% 
+  select(wall = `str_detect(Trump$text, coll("wall", ignore_case = TRUE))`)
+
+mexico <- mexico %>% 
+  select(mexico = `str_detect(Trump$text, coll("mexico", ignore_case = TRUE))`)
+
+fake_news <- fake_news %>% 
+  select(Fake_news = `str_detect(Trump$text, coll("fake news", ignore_case = TRUE))`)
+
+clinton <- clinton %>% 
+  select(Clinton = `str_detect(Trump$text, coll("clinton", ignore_case = TRUE))`)
+
+#And bind the columns to the Trump df
+Trump_new <- cbind(Trump, hillary, sanders, fake_news, clinton, wall, mexico)
+
+#------------------------------------------------------------
+
+Trump_mentions <- Trump_new %>% 
+  gather(key = "Name", value = "Mentioned", Hillary, Sanders, Fake_news, mexico, wall)
+
+
+#No. of original Trump tweets to date:
+Trump_new%>% 
+  filter(is_retweet == 0) %>% 
+  count()
