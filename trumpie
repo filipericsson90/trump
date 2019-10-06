@@ -1,5 +1,4 @@
 library(tidyverse)
-library(wesanderson)
 library(readxl)
 
 Trump <- read_excel("C:/Users/Filip/Desktop/Trump tweets by day of week.xlsx", 
