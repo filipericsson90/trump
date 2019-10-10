@@ -1,7 +1,7 @@
 library(tidyverse)
 library(readxl)
 
-Trump <- read_excel("C:/Users/Filip/Desktop/Trump/Trump tweets by day of week.xlsx", 
+Trump <- read_excel("C:/Users/Desktop/Trump/Trump tweets by day of week.xlsx", 
                     col_types = c("text", "text", "date", "numeric", "numeric", "text", "text"))
 # Plot it!
 ggplot() +
